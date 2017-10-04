@@ -3,7 +3,7 @@ if !has('python')
     finish
 endif
 
-function! Int2Bin()
+function! Int2BinHex()
 python << EOF
 
 """ This plugin converts an integer at cursor to binary and hex """
@@ -13,12 +13,6 @@ import vim
 def get_current_pos():
     y_pos, x_pos = vim.current.window.cursor
     return y_pos, x_pos
-
-
-def get_visual():
-    start, end = get_visual_range
-    lines = get_range(start[0], start[1], end[0], end[1])
-    return lines
 
 
 def get_range(start_y, start_x, end_y, end_x):
@@ -34,7 +28,7 @@ def get_current_number():
     y_pos, x_pos = get_current_pos()
     line = buf[y_pos-1]
     number = ""
-    
+
     # Find the beginning of the number
     for i in range(x_pos, -1, -1):
         if not is_int(line[i]):
@@ -57,15 +51,11 @@ def is_int(number):
         return False
 
 
-def convert(number):
-    return "{0:d} {0:#010b} 0x{0:X}".format(int(number))
-
-
 buf = vim.current.buffer
 number = get_current_number()
 
 if is_int(number):
-    print(convert(number))
+    print("{0:d} {0:#010b} 0x{0:X}".format(int(number)))
 else:
     print("No int found at cursor")
 
